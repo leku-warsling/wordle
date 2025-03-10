@@ -103,7 +103,7 @@ export const useWordle = () => {
   const resetGame = () => setState(newGame());
   const isValidGuess = (guess: string) => guess.length === state.wordLength;
   const hasWon = () => state.currentGuess === state.targetWord;
-  const hasLost = () => state.guesses.length >= state.maxAttempts;
+  const hasLost = () => state.guesses.length + 1 >= state.maxAttempts;
 
   const makeGuess = (guess: string) => {
     if (!isValidGuess(guess)) return;
@@ -122,7 +122,6 @@ export const useWordle = () => {
     if (hasWon()) {
       setState((state) => ({ ...state, gameOver: true, message: 'You won!' }));
     }
-
     if (hasLost()) {
       setState((state) => ({ ...state, gameOver: true, message: 'You lost!' }));
     }
