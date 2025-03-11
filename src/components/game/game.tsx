@@ -23,7 +23,7 @@ export const Game = () => {
       <Board
         guesses={game.state.guesses}
         currentGuess={game.state.currentGuess}
-        letterStateMap={game.state.letterStateMap}
+        letterStates={game.state.letterStates}
       />
       <Keyboard
         onKeyPress={game.onKeyPress}

@@ -1,5 +1,5 @@
 import { isEmpty } from 'ramda';
-import { LetterState, LetterStateMap } from '@hooks/use-wordle';
+import { LetterState } from '@hooks/use-wordle';
 import { Flex } from '@chakra-ui/react';
 
 export type BoardProps = {
@@ -7,7 +7,7 @@ export type BoardProps = {
   guesses?: string[];
   maxAttempts?: number;
   currentGuess?: string;
-  letterStateMap?: LetterStateMap[];
+  letterStates?: Array<LetterState[]>;
 };
 
 const getLetter = (word: string, index: number) => {
@@ -32,13 +32,13 @@ export const Board = ({
   guesses = [],
   maxAttempts = 6,
   currentGuess = '',
-  letterStateMap = [],
+  letterStates = [],
 }: BoardProps) => {
   return (
     <Flex flexDir="column" gap={2}>
       {Array.from({ length: maxAttempts }, (_, row) => {
         const guess = guesses?.[row] || '';
-        const letterState = letterStateMap?.[row] || {};
+        const letterState = letterStates?.[row] || [];
         const isCurrentGuessRow = row === guesses.length;
 
         return (
@@ -65,7 +65,7 @@ export const Board = ({
                   w={16}
                   h={16}
                   {...(hasStyleProps
-                    ? getLetterStyleProps(letterState?.[letter] || 'EMPTY')
+                    ? getLetterStyleProps(letterState?.[col] || 'EMPTY')
                     : {})}
                 >
                   {getLetter(isCurrentGuessRow ? currentGuess : guess, col)}

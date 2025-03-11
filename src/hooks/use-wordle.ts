@@ -13,7 +13,7 @@ export type WordleGameState = {
   gameOver: boolean;
   wordLength: number;
   message: string;
-  letterStateMap: LetterStateMap[];
+  letterStates: Array<LetterState[]>;
   letterHistory: LetterStateMap;
 };
 
@@ -29,7 +29,7 @@ const newGame = (): WordleGameState => ({
   gameOver: false,
   wordLength: 5,
   message: '',
-  letterStateMap: [],
+  letterStates: [],
   letterHistory: {},
 });
 
@@ -84,18 +84,13 @@ const computeLetterHistory = (
   return stateMap;
 };
 
-const computeLetterStateMap = (
+const computeLetterStates = (
   targetWord: string,
   guesses: string[],
-): LetterStateMap[] => {
-  return guesses.map((guess) => {
-    const state: LetterStateMap = {};
-    for (let i = 0; i < guess.length; i++) {
-      const letter = guess[i];
-      state[letter] = getLetterState(targetWord, letter, i);
-    }
-    return state;
-  });
+): Array<LetterState[]> => {
+  return guesses.map((guess) =>
+    guess.split('').map((letter, i) => getLetterState(targetWord, letter, i)),
+  );
 };
 
 export const useWordle = () => {
@@ -114,7 +109,7 @@ export const useWordle = () => {
         ...state,
         currentGuess: '',
         guesses,
-        letterStateMap: computeLetterStateMap(state.targetWord, guesses),
+        letterStates: computeLetterStates(state.targetWord, guesses),
         letterHistory: computeLetterHistory(state.targetWord, guesses),
       };
     });
@@ -139,6 +134,7 @@ export const useWordle = () => {
         makeGuess(state.currentGuess);
         break;
       default:
+        if (state.currentGuess.length >= state.wordLength) return;
         setState((state) => ({
           ...state,
           currentGuess: state.currentGuess + key,
