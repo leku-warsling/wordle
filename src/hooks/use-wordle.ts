@@ -116,7 +116,9 @@ export const useWordle = () => {
 
     if (hasWon()) {
       setState((state) => ({ ...state, gameOver: true, message: 'You won!' }));
+      return;
     }
+
     if (hasLost()) {
       setState((state) => ({ ...state, gameOver: true, message: 'You lost!' }));
     }
